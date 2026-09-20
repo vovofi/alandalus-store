@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر البقالة الشامل - المطور أحمد الصالحي</title>
+    <!-- ربط ملف الـ CSS الخارجي -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>بقالة العائلة الشاملة</h1>
+        <div class="header-btns">
+            <button class="auth-btn" onclick="toggleAuthModal()">حساب المستخدم</button>
+            <button class="admin-btn" onclick="checkAdmin()">لوحة التحكم (الإدارة)</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- نافذة تسجيل الحسابات (قاعدة البيانات) -->
+        <div id="auth-modal">
+            <h3>تسجيل حساب جديد / دخول</h3>
+            <div class="form-group">
+                <label>البريد الإلكتروني:</label>
+                <input type="email" id="user-email" placeholder="example@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور:</label>
+                <input type="password" id="user-password" placeholder="كلمة المرور">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="save-btn" style="background-color: #2980b9;" onclick="registerUser()">إنشاء حساب</button>
+                <button class="save-btn" onclick="loginUser()">تسجيل الدخول</button>
+            </div>
+            <p id="user-status" style="text-align: center; margin-top: 10px; font-weight: bold; color: #27ae60;"></p>
+        </div>
+
+        <!-- لوحة التحكم لإضافة المنتجات -->
+        <div id="admin-panel">
+            <h2>إضافة منتج جديد</h2>
+            <div class="form-group">
+                <label>اسم المنتج:</label>
+                <input type="text" id="p-name" placeholder="مثال: شاحن أصلي / عسل طبيعي">
+            </div>
+            <div class="form-group">
+                <label>رابط الصورة:</label>
+                <input type="text" id="p-image" placeholder="ضع رابط الصورة هنا">
+            </div>
+            <div class="form-group">
+                <label>الوصف:</label>
+                <textarea id="p-desc" placeholder="اكتب وصف المنتج ومواصفاته..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>السعر:</label>
+                <input type="text" id="p-price" placeholder="مثال: 5,000 ريال">
+            </div>
+            <div class="form-group">
+                <label>اختر القسم (الزر):</label>
+                <select id="p-category">
+                    <option value="food">المواد الغذائية</option>
+                    <option value="electronics">الإلكترونيات</option>
+                    <option value="honey">العسل</option>
+                    <option value="games">الألعاب</option>
+                    <option value="tools">مواد البناء والصيانة</option>
+                    <option value="books">الكتب والشناط وقرب الماء</option>
+                    <option value="pesticides">سموم الحشرات</option>
+                    <option value="cleaning">المكانس والعصيان والقلاصات</option>
+                    <option value="perfumes">الروائح ومثبت الشعر</option>
+                    <option value="hair">دهونات الشعر والفازلينات</option>
+                    <option value="nuts">اللوز والمكسرات والزبيب</option>
+                    <option value="shampoo">الشامبوهات والمكياج السفري</option>
+                    <option value="smoke">مشارب الدخان وولاعات إلكترونية</option>
+                    <option value="knives">الخناجر والسكاكين</option>
+                    <option value="bags">شناط السفر وغيرها</option>
+                    <option value="herbs">الأعشاب</option>
+                </select>
+            </div>
+            <button class="save-btn" onclick="addProduct()">حفظ ونشر المنتج</button>
+        </div>
+
+        <!-- أزرار الأقسام -->
+        <div class="categories-nav" id="cat-nav">
+            <button class="cat-btn active" onclick="filterCategory('all', this)">الكل</button>
+            <button class="cat-btn" onclick="filterCategory('food', this)">المواد الغذائية</button>
+            <button class="cat-btn" onclick="filterCategory('electronics', this)">الإلكترونيات</button>
+            <button class="cat-btn" onclick="filterCategory('honey', this)">العسل</button>
+            <button class="cat-btn" onclick="filterCategory('games', this)">الألعاب</button>
+            <button class="cat-btn" onclick="filterCategory('tools', this)">مواد البناء والصيانة</button>
+            <button class="cat-btn" onclick="filterCategory('books', this)">الكتب والشناط ومستلزمات المياه</button>
+            <button class="cat-btn" onclick="filterCategory('pesticides', this)">سموم الحشرات</button>
+            <button class="cat-btn" onclick="filterCategory('cleaning', this)">المكانس وعصيان وقلاصات</button>
+            <button class="cat-btn" onclick="filterCategory('perfumes', this)">الروائح ومثبت الشعر</button>
+            <button class="cat-btn" onclick="filterCategory('hair', this)">دهونات الشعر والفازلين</button>
+            <button class="cat-btn" onclick="filterCategory('nuts', this)">اللوز والمكسرات والزبيب</button>
+            <button class="cat-btn" onclick="filterCategory('shampoo', this)">الشامبوهات والمكياج السفري</button>
+            <button class="cat-btn" onclick="filterCategory('smoke', this)">مشارب الدخان وولاعات</button>
+            <button class="cat-btn" onclick="filterCategory('knives', this)">الخناجر والسكاكين</button>
+            <button class="cat-btn" onclick="filterCategory('bags', this)">شناط السفر</button>
+            <button class="cat-btn" onclick="filterCategory('herbs', this)">الأعشاب</button>
+        </div>
+
+        <!-- عرض المنتجات -->
+        <div class="products-grid" id="products-container"></div>
+
+    </div>
+
+    <!-- تذييل الموقع (حقوق المطور أحمد علي الصالحي ورقم الواتساب) -->
+    <footer>
+        <p>تم تطوير وبرمجة هذا الموقع بواسطة المطور: <span class="dev-info">أحمد علي علي الصالحي</span></p>
+        <p>لطلب تصميم مواقع إلكترونية، بوتات تلجرام، أو صيانة مواقع تواصل معنا:</p>
+        <a class="whatsapp-btn" href="https://wa.me/967770764111" target="_blank">
+            💬 تواصل عبر واتساب (770764111)
+        </a>
+    </footer>
+
+    <!-- ربط ملف الـ JavaScript الخارجي -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
