@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// إعدادات قاعدة بيانات Firebase (قم بربطها بمشروعك المجاني لاحقاً)
+// إعدادات قاعدة بيانات Firebase (يمكنك استبدالها لاحقاً ببيانات مشروعك الحقيقي)
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "your-app.firebaseapp.com",
@@ -14,9 +14,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// دوال المصادقة والتسجيل
 window.registerUser = function() {
     const email = document.getElementById('user-email').value;
     const password = document.getElementById('user-password').value;
+    if(!email || !password) {
+        alert("الرجاء إدخال البريد الإلكتروني وكلمة المرور!");
+        return;
+    }
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             document.getElementById('user-status').innerText = "تم إنشاء الحساب وتسجيل الدخول بنجاح!";
@@ -29,6 +34,10 @@ window.registerUser = function() {
 window.loginUser = function() {
     const email = document.getElementById('user-email').value;
     const password = document.getElementById('user-password').value;
+    if(!email || !password) {
+        alert("الرجاء إدخال البريد الإلكتروني وكلمة المرور!");
+        return;
+    }
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             document.getElementById('user-status').innerText = "مرحباً بك، تم تسجيل الدخول بنجاح!";
@@ -95,6 +104,7 @@ window.filterCategory = function(cat, btn) {
 
 function renderProducts() {
     const container = document.getElementById('products-container');
+    if (!container) return;
     container.innerHTML = '';
 
     const filtered = currentCategory === 'all' ? products : products.filter(p => p.category === currentCategory);
@@ -121,4 +131,7 @@ function renderProducts() {
     });
 }
 
-renderProducts();
+// تشغيل دالة العرض عند تحميل الصفحة بالكامل
+document.addEventListener("DOMContentLoaded", () => {
+    renderProducts();
+});
