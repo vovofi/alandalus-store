@@ -3,119 +3,560 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>متجر البقالة الشامل - المطور أحمد الصالحي</title>
-    <!-- تم تعديل المسار هنا ليناسب غيت هاب بايجيز -->
+
     <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
 
+    <!-- ==================== الهيدر ==================== -->
     <header>
         <h1>بقالة العائلة الشاملة</h1>
+
         <div class="header-btns">
-            <button class="auth-btn" onclick="toggleAuthModal()">حساب المستخدم</button>
-            <button class="admin-btn" onclick="checkAdmin()">لوحة التحكم (الإدارة)</button>
+            <button
+                class="auth-btn"
+                onclick="toggleAuthModal()">
+                حساب المستخدم
+            </button>
+
+            <button
+                class="admin-btn"
+                onclick="checkAdmin()">
+                لوحة التحكم (الإدارة)
+            </button>
         </div>
     </header>
 
+
     <div class="container">
 
-        <!-- نافذة تسجيل الحسابات (قاعدة البيانات) -->
+        <!-- ==================== نافذة الحساب ==================== -->
         <div id="auth-modal">
+
             <h3>تسجيل حساب جديد / دخول</h3>
+
             <div class="form-group">
-                <label>البريد الإلكتروني:</label>
-                <input type="email" id="user-email" placeholder="example@gmail.com">
+                <label for="user-email">
+                    البريد الإلكتروني:
+                </label>
+
+                <input
+                    type="email"
+                    id="user-email"
+                    placeholder="example@gmail.com">
             </div>
+
+
             <div class="form-group">
-                <label>كلمة المرور:</label>
-                <input type="password" id="user-password" placeholder="كلمة المرور">
+                <label for="user-password">
+                    كلمة المرور:
+                </label>
+
+                <input
+                    type="password"
+                    id="user-password"
+                    placeholder="كلمة المرور">
             </div>
+
+
             <div style="display: flex; gap: 10px;">
-                <button class="save-btn" style="background-color: #2980b9;" onclick="registerUser()">إنشاء حساب</button>
-                <button class="save-btn" onclick="loginUser()">تسجيل الدخول</button>
+
+                <button
+                    class="save-btn"
+                    style="background-color: #2980b9;"
+                    onclick="registerUser()">
+                    إنشاء حساب
+                </button>
+
+                <button
+                    class="save-btn"
+                    onclick="loginUser()">
+                    تسجيل الدخول
+                </button>
+
             </div>
-            <p id="user-status" style="text-align: center; margin-top: 10px; font-weight: bold; color: #27ae60;"></p>
+
+
+            <p
+                id="user-status"
+                style="
+                    text-align: center;
+                    margin-top: 10px;
+                    font-weight: bold;
+                    color: #27ae60;
+                ">
+            </p>
+
         </div>
 
-        <!-- لوحة التحكم لإضافة المنتجات -->
+
+        <!-- ==================== لوحة الإدارة ==================== -->
         <div id="admin-panel">
+
             <h2>إضافة منتج جديد</h2>
+
+
+            <!-- اسم المنتج -->
             <div class="form-group">
-                <label>اسم المنتج:</label>
-                <input type="text" id="p-name" placeholder="مثال: شاحن أصلي / عسل طبيعي">
+
+                <label for="p-name">
+                    اسم المنتج:
+                </label>
+
+                <input
+                    type="text"
+                    id="p-name"
+                    placeholder="مثال: شاحن أصلي / عسل طبيعي">
+
             </div>
+
+
+            <!-- ==================== اختيار الصورة ==================== -->
             <div class="form-group">
-                <label>رابط الصورة:</label>
-                <input type="text" id="p-image" placeholder="ضع رابط الصورة هنا">
+
+                <label for="p-image">
+                    صورة المنتج:
+                </label>
+
+                <input
+                    type="file"
+                    id="p-image"
+                    accept="image/*"
+                    onchange="previewProductImage(event)"
+                >
+
+                <!-- معاينة الصورة -->
+                <div
+                    id="image-preview-container"
+                    style="
+                        display: none;
+                        margin-top: 15px;
+                        text-align: center;
+                    ">
+
+                    <p
+                        style="
+                            margin-bottom: 8px;
+                            font-weight: bold;
+                        ">
+                        معاينة الصورة:
+                    </p>
+
+                    <img
+                        id="image-preview"
+                        src=""
+                        alt="معاينة صورة المنتج"
+                        style="
+                            width: 180px;
+                            height: 180px;
+                            object-fit: cover;
+                            border-radius: 12px;
+                            border: 2px solid #ddd;
+                            display: block;
+                            margin: auto;
+                        "
+                    >
+
+                    <!-- زر حذف الصورة -->
+                    <button
+                        type="button"
+                        onclick="removeProductImage()"
+                        style="
+                            margin-top: 10px;
+                            padding: 8px 15px;
+                            border: none;
+                            border-radius: 6px;
+                            background: #e74c3c;
+                            color: white;
+                            cursor: pointer;
+                        ">
+                        حذف الصورة
+                    </button>
+
+                </div>
+
             </div>
+
+
+            <!-- الوصف -->
             <div class="form-group">
-                <label>الوصف:</label>
-                <textarea id="p-desc" placeholder="اكتب وصف المنتج ومواصفاته..."></textarea>
+
+                <label for="p-desc">
+                    الوصف:
+                </label>
+
+                <textarea
+                    id="p-desc"
+                    placeholder="اكتب وصف المنتج ومواصفاته...">
+                </textarea>
+
             </div>
+
+
+            <!-- السعر -->
             <div class="form-group">
-                <label>السعر:</label>
-                <input type="text" id="p-price" placeholder="مثال: 5,000 ريال">
+
+                <label for="p-price">
+                    السعر:
+                </label>
+
+                <input
+                    type="text"
+                    id="p-price"
+                    placeholder="مثال: 5,000 ريال">
+
             </div>
+
+
+            <!-- القسم -->
             <div class="form-group">
-                <label>اختر القسم (الزر):</label>
+
+                <label for="p-category">
+                    اختر القسم (الزر):
+                </label>
+
                 <select id="p-category">
-                    <option value="food">المواد الغذائية</option>
-                    <option value="electronics">الإلكترونيات</option>
-                    <option value="honey">العسل</option>
-                    <option value="games">الألعاب</option>
-                    <option value="tools">مواد البناء والصيانة</option>
-                    <option value="books">الكتب والشناط وقرب الماء</option>
-                    <option value="pesticides">سموم الحشرات</option>
-                    <option value="cleaning">المكانس والعصيان والقلاصات</option>
-                    <option value="perfumes">الروائح ومثبت الشعر</option>
-                    <option value="hair">دهونات الشعر والفازلينات</option>
-                    <option value="nuts">اللوز والمكسرات والزبيب</option>
-                    <option value="shampoo">الشامبوهات والمكياج السفري</option>
-                    <option value="smoke">مشارب الدخان وولاعات إلكترونية</option>
-                    <option value="knives">الخناجر والسكاكين</option>
-                    <option value="bags">شناط السفر وغيرها</option>
-                    <option value="herbs">الأعشاب</option>
+
+                    <option value="food">
+                        المواد الغذائية
+                    </option>
+
+                    <option value="electronics">
+                        الإلكترونيات
+                    </option>
+
+                    <option value="honey">
+                        العسل
+                    </option>
+
+                    <option value="games">
+                        الألعاب
+                    </option>
+
+                    <option value="tools">
+                        مواد البناء والصيانة
+                    </option>
+
+                    <option value="books">
+                        الكتب والشناط وقرب الماء
+                    </option>
+
+                    <option value="pesticides">
+                        سموم الحشرات
+                    </option>
+
+                    <option value="cleaning">
+                        المكانس والعصيان والقلاصات
+                    </option>
+
+                    <option value="perfumes">
+                        الروائح ومثبت الشعر
+                    </option>
+
+                    <option value="hair">
+                        دهونات الشعر والفازلينات
+                    </option>
+
+                    <option value="nuts">
+                        اللوز والمكسرات والزبيب
+                    </option>
+
+                    <option value="shampoo">
+                        الشامبوهات والمكياج السفري
+                    </option>
+
+                    <option value="smoke">
+                        مشارب الدخان وولاعات إلكترونية
+                    </option>
+
+                    <option value="knives">
+                        الخناجر والسكاكين
+                    </option>
+
+                    <option value="bags">
+                        شناط السفر وغيرها
+                    </option>
+
+                    <option value="herbs">
+                        الأعشاب
+                    </option>
+
                 </select>
+
             </div>
-            <button class="save-btn" onclick="addProduct()">حفظ ونشر المنتج</button>
+
+
+            <!-- زر الحفظ -->
+            <button
+                class="save-btn"
+                onclick="addProduct()">
+                حفظ ونشر المنتج
+            </button>
+
         </div>
 
-        <!-- أزرار الأقسام -->
-        <div class="categories-nav" id="cat-nav">
-            <button class="cat-btn active" onclick="filterCategory('all', this)">الكل</button>
-            <button class="cat-btn" onclick="filterCategory('food', this)">المواد الغذائية</button>
-            <button class="cat-btn" onclick="filterCategory('electronics', this)">الإلكترونيات</button>
-            <button class="cat-btn" onclick="filterCategory('honey', this)">العسل</button>
-            <button class="cat-btn" onclick="filterCategory('games', this)">الألعاب</button>
-            <button class="cat-btn" onclick="filterCategory('tools', this)">مواد البناء والصيانة</button>
-            <button class="cat-btn" onclick="filterCategory('books', this)">الكتب والشناط ومستلزمات المياه</button>
-            <button class="cat-btn" onclick="filterCategory('pesticides', this)">سموم الحشرات</button>
-            <button class="cat-btn" onclick="filterCategory('cleaning', this)">المكانس وعصيان وقلاصات</button>
-            <button class="cat-btn" onclick="filterCategory('perfumes', this)">الروائح ومثبت الشعر</button>
-            <button class="cat-btn" onclick="filterCategory('hair', this)">دهونات الشعر والفازلين</button>
-            <button class="cat-btn" onclick="filterCategory('nuts', this)">اللوز والمكسرات والزبيب</button>
-            <button class="cat-btn" onclick="filterCategory('shampoo', this)">الشامبوهات والمكياج السفري</button>
-            <button class="cat-btn" onclick="filterCategory('smoke', this)">مشارب الدخان وولاعات</button>
-            <button class="cat-btn" onclick="filterCategory('knives', this)">الخناجر والسكاكين</button>
-            <button class="cat-btn" onclick="filterCategory('bags', this)">شناط السفر</button>
-            <button class="cat-btn" onclick="filterCategory('herbs', this)">الأعشاب</button>
+
+        <!-- ==================== الأقسام ==================== -->
+        <div
+            class="categories-nav"
+            id="cat-nav">
+
+            <button
+                class="cat-btn active"
+                onclick="filterCategory('all', this)">
+                الكل
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('food', this)">
+                المواد الغذائية
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('electronics', this)">
+                الإلكترونيات
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('honey', this)">
+                العسل
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('games', this)">
+                الألعاب
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('tools', this)">
+                مواد البناء والصيانة
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('books', this)">
+                الكتب والشناط ومستلزمات المياه
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('pesticides', this)">
+                سموم الحشرات
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('cleaning', this)">
+                المكانس وعصيان وقلاصات
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('perfumes', this)">
+                الروائح ومثبت الشعر
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('hair', this)">
+                دهونات الشعر والفازلين
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('nuts', this)">
+                اللوز والمكسرات والزبيب
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('shampoo', this)">
+                الشامبوهات والمكياج السفري
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('smoke', this)">
+                مشارب الدخان وولاعات
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('knives', this)">
+                الخناجر والسكاكين
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('bags', this)">
+                شناط السفر
+            </button>
+
+
+            <button
+                class="cat-btn"
+                onclick="filterCategory('herbs', this)">
+                الأعشاب
+            </button>
+
         </div>
 
-        <!-- عرض المنتجات -->
-        <div class="products-grid" id="products-container"></div>
+
+        <!-- ==================== المنتجات ==================== -->
+        <div
+            class="products-grid"
+            id="products-container">
+        </div>
 
     </div>
 
-    <!-- تذييل الموقع (حقوق المطور أحمد علي الصالحي ورقم الواتساب) -->
+
+    <!-- ==================== الفوتر ==================== -->
     <footer>
-        <p>تم تطوير وبرمجة هذا الموقع بواسطة المطور: <span class="dev-info">أحمد علي علي الصالحي</span></p>
-        <p>لطلب تصميم مواقع إلكترونية، بوتات تلجرام، أو صيانة مواقع تواصل معنا:</p>
-        <a class="whatsapp-btn" href="https://wa.me/967770764111" target="_blank">
+
+        <p>
+            تم تطوير وبرمجة هذا الموقع بواسطة المطور:
+            <span class="dev-info">
+                أحمد علي علي الصالحي
+            </span>
+        </p>
+
+
+        <p>
+            لطلب تصميم مواقع إلكترونية، بوتات تلجرام،
+            أو صيانة مواقع تواصل معنا:
+        </p>
+
+
+        <a
+            class="whatsapp-btn"
+            href="https://wa.me/967770764111"
+            target="_blank">
+
             💬 تواصل عبر واتساب (770764111)
+
         </a>
+
     </footer>
 
-    <!-- تم تعديل مسار الجافاسكريبت هنا ليطابق المشروع -->
-    <script type="module" src="./app.js"></script>
+
+    <!-- ==================== JavaScript ==================== -->
+    <script>
+
+        /*
+         * معاينة صورة المنتج قبل الحفظ
+         */
+        function previewProductImage(event) {
+
+            const file = event.target.files[0];
+
+            const preview = document.getElementById("image-preview");
+
+            const container =
+                document.getElementById("image-preview-container");
+
+
+            if (!file) {
+
+                container.style.display = "none";
+
+                preview.src = "";
+
+                return;
+            }
+
+
+            /*
+             * التأكد أن الملف صورة
+             */
+            if (!file.type.startsWith("image/")) {
+
+                alert("الرجاء اختيار ملف صورة فقط.");
+
+                event.target.value = "";
+
+                container.style.display = "none";
+
+                preview.src = "";
+
+                return;
+            }
+
+
+            /*
+             * إنشاء معاينة للصورة
+             */
+            const reader = new FileReader();
+
+
+            reader.onload = function(e) {
+
+                preview.src = e.target.result;
+
+                container.style.display = "block";
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        }
+
+
+        /*
+         * حذف الصورة المختارة
+         */
+        function removeProductImage() {
+
+            const input =
+                document.getElementById("p-image");
+
+            const preview =
+                document.getElementById("image-preview");
+
+            const container =
+                document.getElementById("image-preview-container");
+
+
+            input.value = "";
+
+            preview.src = "";
+
+            container.style.display = "none";
+
+        }
+
+    </script>
+
+
+    <!-- ملف التطبيق الأساسي -->
+    <script
+        type="module"
+        src="./app.js">
+    </script>
+
 </body>
-</html>
+                        </html>
