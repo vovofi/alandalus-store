@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isPlatformAdmin() {
+      return isAuthenticated() && getUserData().role == 'platform_admin';
+    }
+
+    function isStoreOwner(storeId) {
+      return isAuthenticated() && get(/databases/$(database)/documents/stores/$(storeId)).data.ownerId == request.auth.uid;
+    }
+
+    function isStoreStaff(storeId) {
+      return isAuthenticated() && exists(/databases/$(database)/documents/stores/$(storeId)/members/$(request.auth.uid));
+    }
+
+    function hasStorePermission(storeId, permission) {
+      let memberData = get(/databases/$(database)/documents/stores/$(storeId)/members/$(request.auth.uid)).data;
+      return isStoreOwner(storeId) || (isStoreStaff(storeId) && (memberData.permissions[permission] == true || memberData.role == 'manager'));
+    }
+
+    // Users
+    match /users/{uid} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == uid && request.resource.data.role != 'platform_admin';
+      allow update: if isAuthenticated() && request.auth.uid == uid && request.resource.data.role == resource.data.role;
+    }
+
+    match /users/{uid}/{subcollection}/{document=**} {
+      allow read, write: if isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // Stores
+    match /stores/{storeId} {
+      allow read: if resource.data.isPublic == true || isStoreOwner(storeId) || isStoreStaff(storeId) || isPlatformAdmin();
+      allow create: if isAuthenticated();
+      allow update: if isStoreOwner(storeId) || isPlatformAdmin();
+
+      match /members/{memberId} {
+        allow read: if isStoreOwner(storeId) || isStoreStaff(storeId);
+        allow write: if isStoreOwner(storeId);
+      }
+
+      match /categories/{categoryId} {
+        allow read: if true;
+        allow write: if isStoreOwner(storeId) || hasStorePermission(storeId, 'products');
+      }
+
+      match /products/{productId} {
+        allow read: if true;
+        allow write: if isStoreOwner(storeId) || hasStorePermission(storeId, 'products');
+      }
+
+      match /orders/{orderId} {
+        allow read: if isAuthenticated() && (resource.data.customerId == request.auth.uid || isStoreOwner(storeId) || isStoreStaff(storeId));
+        allow create: if isAuthenticated() && request.resource.data.customerId == request.auth.uid;
+        allow update: if isStoreOwner(storeId) || hasStorePermission(storeId, 'orders');
+
+        match /items/{itemId} {
+          allow read: if isAuthenticated();
+          allow create: if isAuthenticated();
+        }
+
+        match /statusHistory/{historyId} {
+          allow read: if isAuthenticated();
+          allow create: if isAuthenticated();
+        }
+      }
+
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create: if isAuthenticated();
+      }
+
+      match /coupons/{couponId} {
+        allow read: if true;
+        allow write: if isStoreOwner(storeId) || hasStorePermission(storeId, 'settings');
+      }
+    }
+  }
+}
